@@ -1,0 +1,305 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model accomodation {
+  id                    String                 @id @db.Uuid
+  created_at            DateTime?              @db.Timestamp(6)
+  deleted               Boolean
+  modified_at           DateTime?              @db.Timestamp(6)
+  active                Boolean
+  avatar_url            String?                @db.VarChar(255)
+  description           String?
+  name                  String?                @db.VarChar(255)
+  category_id           String?                @db.Uuid
+  city_id               BigInt?
+  company_id            BigInt?
+  address               String?                @db.VarChar(255)
+  latitude              Decimal?               @db.Decimal(16, 2)
+  longitude             Decimal?               @db.Decimal(16, 2)
+  company               company?               @relation(fields: [company_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fkcl5asuaqx7x9cobqllj40bgv8")
+  accomodation_category accomodation_category? @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fkrwgpt8m073mkb2xcunxfxy8gw")
+  city                  city?                  @relation(fields: [city_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fks7xs99nyt33a8k2kvru6o9hej")
+  room                  room[]
+}
+
+model accomodation_category {
+  id                         String         @id @db.Uuid
+  created_at                 DateTime?      @db.Timestamp(6)
+  deleted                    Boolean
+  modified_at                DateTime?      @db.Timestamp(6)
+  accomodation_category_name String?        @db.VarChar(255)
+  accomodation               accomodation[]
+}
+
+model city {
+  country_id   Int
+  deleted      Boolean
+  latitude     Decimal?       @db.Decimal(38, 2)
+  longitude    Decimal?       @db.Decimal(38, 2)
+  state_id     Int
+  created_at   DateTime?      @db.Timestamp(6)
+  id           BigInt         @id
+  modified_at  DateTime?      @db.Timestamp(6)
+  country_name String?        @db.VarChar(255)
+  name         String?        @db.VarChar(255)
+  state_name   String?        @db.VarChar(255)
+  wiki_data_id String?        @db.VarChar(255)
+  accomodation accomodation[]
+  company      company[]
+}
+
+model company {
+  active          Boolean
+  deleted         Boolean
+  city_id         BigInt?
+  created_at      DateTime?      @db.Timestamp(6)
+  id              BigInt         @id
+  modified_at     DateTime?      @db.Timestamp(6)
+  tax_id          String?        @db.VarChar(25)
+  company_address String?        @db.VarChar(255)
+  company_name    String?        @db.VarChar(255)
+  details         String?
+  email           String?        @db.VarChar(255)
+  uid             String?        @db.VarChar(255)
+  accomodation    accomodation[]
+  city            city?          @relation(fields: [city_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk11ll1ewpdxjg9bm3jtg858qn8")
+  company_plan    company_plan[]
+  company_user    company_user[]
+}
+
+model company_invoice {
+  deleted         Boolean
+  invoice_amount  Float?
+  canceled_at     DateTime? @db.Timestamp(6)
+  company_id      BigInt?
+  created_at      DateTime? @db.Timestamp(6)
+  id              BigInt    @id
+  issued_at       DateTime  @db.Timestamp(6)
+  modified_at     DateTime? @db.Timestamp(6)
+  paid_at         DateTime? @db.Timestamp(6)
+  invoice_details String?
+  invoice_period  String?   @db.VarChar(255)
+}
+
+model company_plan {
+  deleted          Boolean
+  activated_date   DateTime? @db.Timestamp(6)
+  company_id       BigInt?
+  created_at       DateTime? @db.Timestamp(6)
+  deactivated_date DateTime? @db.Timestamp(6)
+  id               BigInt    @id
+  modified_at      DateTime? @db.Timestamp(6)
+  plan_id          BigInt?
+  plan             plan?     @relation(fields: [plan_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk70vqpqjw27qncm6fr49qo1god")
+  company          company?  @relation(fields: [company_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fkjike6khr59ihqvx6doy779r53")
+}
+
+model company_user {
+  active      Boolean
+  approved    Boolean
+  deleted     Boolean
+  owner       Boolean
+  company_id  BigInt?
+  created_at  DateTime? @db.Timestamp(6)
+  id          BigInt    @id
+  modified_at DateTime? @db.Timestamp(6)
+  first_name  String?   @db.VarChar(128)
+  last_name   String?   @db.VarChar(128)
+  email       String?   @db.VarChar(255)
+  password    String?   @db.VarChar(255)
+  username    String?   @db.VarChar(255)
+  phone       String?   @db.VarChar(255)
+  company     company?  @relation(fields: [company_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fkby7i4fqhd2jvje6rvc5vc5837")
+}
+
+model country {
+  deleted          Boolean
+  latitude         Decimal?           @db.Decimal(38, 2)
+  longitude        Decimal?           @db.Decimal(38, 2)
+  region_id        Int
+  subregion_id     Int
+  created_at       DateTime?          @db.Timestamp(6)
+  id               BigInt             @id
+  modified_at      DateTime?          @db.Timestamp(6)
+  capital          String?            @db.VarChar(255)
+  currency         String?            @db.VarChar(255)
+  currency_name    String?            @db.VarChar(255)
+  currency_symbol  String?            @db.VarChar(255)
+  emoji            String?            @db.VarChar(255)
+  emojiu           String?            @db.VarChar(255)
+  iso2             String?            @db.VarChar(255)
+  iso3             String?            @db.VarChar(255)
+  name             String?            @db.VarChar(255)
+  nationality      String?            @db.VarChar(255)
+  numeric_code     String?            @db.VarChar(255)
+  phone_code       String?            @db.VarChar(255)
+  tld              String?            @db.VarChar(255)
+  country_timezone country_timezone[]
+}
+
+model country_timezone {
+  country_id BigInt
+  tag_id     BigInt
+  timezone   timezone @relation(fields: [tag_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fkc6ehh514vuxui1la7b2frwy2m")
+  country    country  @relation(fields: [country_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fkpkpwhttobpns8ayb8upky534q")
+
+  @@id([country_id, tag_id])
+}
+
+model guest {
+  id            String          @id @db.Uuid
+  address       String?         @db.VarChar(255)
+  details       String?
+  email         String?         @db.VarChar(255)
+  first_name    String?         @db.VarChar(255)
+  last_name     String?         @db.VarChar(255)
+  phone         String?         @db.VarChar(255)
+  invoice_guest invoice_guest[]
+  reservation   reservation[]
+}
+
+model invoice_guest {
+  id             String    @id @db.Uuid
+  invoice_amount Decimal?  @db.Decimal(10, 2)
+  ts_canceled    DateTime? @db.Timestamp(6)
+  ts_issued      DateTime? @db.Timestamp(6)
+  ts_paid        DateTime? @db.Timestamp(6)
+  guest_id       String?   @db.Uuid
+  guest          guest?    @relation(fields: [guest_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fkqbol4vu311v1sn6000ucxcqyj")
+}
+
+model plan {
+  deleted       Boolean
+  monthly_price Float
+  room_max      Int
+  room_min      Int
+  created_at    DateTime?      @db.Timestamp(6)
+  id            BigInt         @id
+  modified_at   DateTime?      @db.Timestamp(6)
+  plan_name     String?        @db.VarChar(64)
+  details       String?
+  company_plan  company_plan[]
+}
+
+model region {
+  deleted      Boolean
+  created_at   DateTime? @db.Timestamp(6)
+  id           BigInt    @id
+  modified_at  DateTime? @db.Timestamp(6)
+  metadata     String?   @db.VarChar(255)
+  name         String?   @db.VarChar(255)
+  wiki_data_id String?   @db.VarChar(255)
+}
+
+model reservation {
+  id                       String                     @id @db.Uuid
+  end_date                 DateTime?                  @db.Date
+  start_date               DateTime?                  @db.Date
+  total_price              Decimal?                   @db.Decimal(10, 2)
+  ts_created               DateTime?                  @db.Timestamp(6)
+  ts_updated               DateTime?                  @db.Timestamp(6)
+  guest_id                 String?                    @db.Uuid
+  book_for_some_one        Boolean
+  guests                   String?
+  remark                   String?
+  guest                    guest?                     @relation(fields: [guest_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk8rduaf1n8es4jf5wagbjhjepj")
+  reservation_status_event reservation_status_event[]
+  room_reservation         room_reservation[]
+}
+
+model reservation_status_catalog {
+  id                       BigInt                     @id
+  status_name              String?                    @db.VarChar(255)
+  reservation_status_event reservation_status_event[]
+}
+
+model reservation_status_event {
+  id                            String                      @id @db.Uuid
+  details                       String?
+  ts_created                    DateTime?                   @db.Timestamp(6)
+  reservation_id                String?                     @db.Uuid
+  reservation_status_catalog_id BigInt?
+  reservation                   reservation?                @relation(fields: [reservation_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fkj0qj6p1dx9de7g1vs2j50g3by")
+  reservation_status_catalog    reservation_status_catalog? @relation(fields: [reservation_status_catalog_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fksg93po09vp4o36yrg29urrk4j")
+}
+
+model room {
+  id               String             @id @db.Uuid
+  created_at       DateTime?          @db.Timestamp(6)
+  deleted          Boolean
+  modified_at      DateTime?          @db.Timestamp(6)
+  default_price    Float?
+  description      String?
+  max_adults       Int?
+  max_children     Int?
+  quantity         Int?
+  room_name        String?            @db.VarChar(255)
+  accomodation_id  String?            @db.Uuid
+  room_type_id     String?            @db.Uuid
+  accomodation     accomodation?      @relation(fields: [accomodation_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk278cktna7sy23dop3k54gvcc0")
+  room_type        room_type?         @relation(fields: [room_type_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fkd468eq7j1cbue8mk20qfrj5et")
+  room_price       room_price[]
+  room_reservation room_reservation[]
+}
+
+model room_price {
+  id           BigInt    @id
+  created_at   DateTime? @db.Timestamp(6)
+  deleted      Boolean
+  modified_at  DateTime? @db.Timestamp(6)
+  applied_from DateTime? @db.Date
+  applied_to   DateTime? @db.Date
+  price        Float?
+  uid          String?   @db.Uuid
+  room_id      String?   @db.Uuid
+  room         room?     @relation(fields: [room_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fkfj3ode2586k91fceuwrtfxhqp")
+}
+
+model room_reservation {
+  id             String       @id @db.Uuid
+  price          Decimal?     @db.Decimal(10, 2)
+  reservation_id String?      @db.Uuid
+  room_id        String?      @db.Uuid
+  quantity       Int?
+  room           room?        @relation(fields: [room_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk19p6c3un3mbs7b7bxkcxk8xn2")
+  reservation    reservation? @relation(fields: [reservation_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fkk5ue6e363dj4dx91gjmk279wj")
+}
+
+model room_type {
+  id             String    @id @db.Uuid
+  created_at     DateTime? @db.Timestamp(6)
+  deleted        Boolean
+  modified_at    DateTime? @db.Timestamp(6)
+  room_type_name String?   @db.VarChar(255)
+  room           room[]
+}
+
+model subregion {
+  deleted      Boolean
+  created_at   DateTime? @db.Timestamp(6)
+  id           BigInt    @id
+  modified_at  DateTime? @db.Timestamp(6)
+  region_id    BigInt?
+  metadata     String?   @db.VarChar(255)
+  name         String?   @db.VarChar(255)
+  wiki_data_id String?   @db.VarChar(255)
+}
+
+model timezone {
+  deleted          Boolean
+  gmt_offset       Int
+  created_at       DateTime?          @db.Timestamp(6)
+  id               BigInt             @id
+  modified_at      DateTime?          @db.Timestamp(6)
+  abbreviation     String?            @db.VarChar(255)
+  gmt_offset_name  String?            @db.VarChar(255)
+  tz_name          String?            @db.VarChar(255)
+  zone_name        String?            @db.VarChar(255)
+  country_timezone country_timezone[]
+}

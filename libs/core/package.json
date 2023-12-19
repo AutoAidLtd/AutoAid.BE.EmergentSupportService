@@ -1,0 +1,34 @@
+{
+  "name": "@secretlab/core",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.js",
+  "scripts": {
+    "postinstall": "pnpm run build",
+    "prebuild": "rimraf dist",
+    "build": "tsc -p tsconfig.json",
+    "build:watch": "tsc -p tsconfig.build.json -w --preserveWatchOutput",
+    "start:dev": "pnpm run build:watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "reflect-metadata": "^0.2.1",
+    "rimraf": "^5.0.5",
+    "rxjs": "^7.8.1",
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "^10.3.0",
+    "@nestjs/core": "^10.3.0",
+    "@nestjs/testing": "^10.3.0",
+    "reflect-metadata": "^0.2.1",
+    "rxjs": "^7.8.1"
+  },
+  "dependencies": {
+    "@secretlab/core": "^1.0.0"
+  }
+}

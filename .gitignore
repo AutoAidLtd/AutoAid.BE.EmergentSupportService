@@ -1,0 +1,39 @@
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# VS Code
+.vscode/
+*.code-workspace
+.history/
+
+# IDE-specific files
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Logs
+logs/
+*.log
+
+# Build output
+dist/
+build/
+out/
+
+# Dependency directories
+bower_components/
+jspm_packages/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+.env.test
+.env.test.local
+
+# OS-specific files
+.DS_Store
+Thumbs.db
