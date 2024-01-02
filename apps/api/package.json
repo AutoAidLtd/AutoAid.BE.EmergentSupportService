@@ -1,0 +1,32 @@
+{
+  "name": "@secretlab/api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
+    "start:debug": "nest start --debug --watch",
+    "start:prod": "node dist/main"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@nestjs/common": "^10.3.0",
+    "@nestjs/core": "^10.3.0",
+    "@nestjs/platform-express": "^10.3.0",
+    "@nestjs/platform-socket.io": "^10.3.0",
+    "@nestjs/testing": "^10.3.0",
+    "@nestjs/websockets": "^10.3.0",
+    "@secretlab/core": "workspace:*",
+    "@secretlab/prisma": "workspace:*",
+    "@secretlab/socket": "workspace:*",
+    "import": "^0.0.6",
+    "supertest": "^6.3.3"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.11"
+  }
+}
