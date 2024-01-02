@@ -1,0 +1,25 @@
+{
+  "name": "@secretlab/socket",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "pnpm  build",
+    "prebuild": "rimraf dist",
+    "build": "tsc -p tsconfig.build.json",
+    "build:watch": "tsc -p tsconfig.build.json -w --preserveWatchOutput"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@nestjs/common": "^10.3.0",
+    "@nestjs/core": "^10.3.0",
+    "@nestjs/websockets": "^10.3.0",
+    "@secretlab/core": "workspace:*",
+    "rxjs": "^7.8.1",
+    "socket.io": "^4.7.2"
+  }
+}

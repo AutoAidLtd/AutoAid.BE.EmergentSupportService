@@ -1,3 +1,14 @@
 {
-  "extends": "./tsconfig.base.json"
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@secretlab/socket": [
+        "libs/socket/src"
+      ],
+      "@secretlab/socket/*": [
+        "libs/socket/src/*"
+      ]
+    }
+  }
 }

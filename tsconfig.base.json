@@ -1,24 +1,23 @@
 {
-    "compilerOptions": {
-      "module": "commonjs",
-      "removeComments": true,
-      "emitDecoratorMetadata": true,
-      "experimentalDecorators": true,
-      "allowSyntheticDefaultImports": true,
-      "target": "ES2022",
-      "sourceMap": true,
-      "skipLibCheck": true,
-      "composite": true,
-      "incremental": true
+  "compilerOptions": {
+    "module": "commonjs",
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2022",
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "composite": true,
+    "incremental": true
+  },
+  "exclude": ["packages/**/tests/**", "packages/**/dist/**"],
+  "references": [
+    {
+      "path": "./apps/*"
     },
-    "exclude": ["packages/**/tests/**", "packages/**/dist/**"],
-    "references": [
-      {
-        "path": "./apps/*"
-      },
-      {
-        "path": "./libs/*"
-      }
-    ]
-  }
-  
+    {
+      "path": "./libs/*"
+    }
+  ]
+}
