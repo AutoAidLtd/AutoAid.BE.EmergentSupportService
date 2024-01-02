@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
+import { PrismaModule } from "@secretlab/prisma";
+import { AccomodationModule } from 'accomodation/accomodation.module';
+import { RealtimeModule } from 'realtime/realtime.module';
 import { ApiController } from './api.controller';
 import { ApiService } from './api.service';
-import {PrismaModule, PrismaService} from "@secretlab/prisma"
-import { SocketModule } from '@secretlab/socket';
-import { RealtimeModule } from 'realtime/realtime.module';
-import { AccomodationService } from './accomodation/accomodation.service';
-import { AccomodationModule } from 'accomodation/accomodation.module';
+
 
 
 @Module({
