@@ -8,6 +8,12 @@
       ],
       "@secretlab/socket/*": [
         "libs/socket/src/*"
+      ],
+      "@secretlab/http": [
+        "libs/http/src"
+      ],
+      "@secretlab/http/*": [
+        "libs/http/src/*"
       ]
     }
   }

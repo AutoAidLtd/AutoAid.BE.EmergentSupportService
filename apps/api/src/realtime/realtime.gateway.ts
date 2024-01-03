@@ -15,7 +15,6 @@ export class RealtimeGateway extends SocketGateway {
   @SubscribeMessage('message2')
   async handleMessage(client: any, payload: any): Promise<void> {
     client.emit("message2", "Hihi from message2");
-
     client.emit("message2",await this.accoService.getAll());
   }
 }

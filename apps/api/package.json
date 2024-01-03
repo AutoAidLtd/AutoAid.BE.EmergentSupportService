@@ -14,7 +14,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@nestjs/axios": "^3.0.1",
     "@nestjs/common": "^10.3.0",
+    "@nestjs/config": "^3.1.1",
     "@nestjs/core": "^10.3.0",
     "@nestjs/platform-express": "^10.3.0",
     "@nestjs/platform-socket.io": "^10.3.0",
@@ -23,6 +25,7 @@
     "@secretlab/core": "workspace:*",
     "@secretlab/prisma": "workspace:*",
     "@secretlab/socket": "workspace:*",
+    "axios": "^1.6.3",
     "import": "^0.0.6",
     "supertest": "^6.3.3"
   },
