@@ -5,6 +5,7 @@ import { SocketGateway } from '@secretlab/socket';
 import { AccomodationService } from 'accomodation/accomodation.service';
 import { EmergentRequestDto } from '../dto/EmergentRequestDto';
 import { Coordinate } from 'modules/garage/dto/coordinate.dto';
+import { EmergentReceiveEvent } from '../event/emergentEvent.enum';
 
 export class EmergentGateway extends SocketGateway {
 
@@ -12,7 +13,7 @@ export class EmergentGateway extends SocketGateway {
     super()
   }
 
-  @SubscribeMessage('SEND_REQUEST_EMERGENT')
+  @SubscribeMessage(EmergentReceiveEvent.userSendRequest)
   async handleRequestSend(client: any, payload: [EmergentRequestDto,...any]): Promise<void> {
     console.log("hi");
     console.log("payload ", payload);
@@ -26,14 +27,15 @@ export class EmergentGateway extends SocketGateway {
     client.emit("SEND_REQUEST_HANDLED",)
 
   }
-  @SubscribeMessage('GARAGE_APPROVE_REQUEST')
+  @SubscribeMessage(EmergentReceiveEvent.garageApproveRequest)
   async handleGarageApproveRequest(client: any, payload : [any, ...any]):Promise<void>{
+    console.log("hi",EmergentReceiveEvent.garageApproveRequest);
     // 1. get persisted request, check if any garage approved yet
     // 2. If yes -> return  ,if no -> update and persist that request
     // 3. join room
     // 4. send information of each other for all in room
   }
-  @SubscribeMessage('GARAGE_APPROVE_REQUEST')
+  @SubscribeMessage(EmergentReceiveEvent.garageInitSupport)
   async garageInitEmergentRequest(client: any, payload : [any, ...any]):Promise<void>{
     // 1. get persisted request, check if any garage approved yet
     // 2. If yes -> return  ,if no -> update and persist that request
@@ -41,13 +43,13 @@ export class EmergentGateway extends SocketGateway {
     // 4. send information of each other for all in room
   }
 
-  @SubscribeMessage('GARAGE_UPDATE_LOCATION')
+  @SubscribeMessage(EmergentReceiveEvent.garageUpdateLocation)
   async garageUpdateLocation(@ConnectedSocket() client, payload : [Coordinate, ...any]):Promise<void>{
     // 1. get room of garage
     // 2. emit location info to room
   }
 
-  @SubscribeMessage('USER_UPDATE_LOCATION')
+  @SubscribeMessage(EmergentReceiveEvent.userSendRequest)
   async userUpdateLocation(@ConnectedSocket() client, payload : [Coordinate, ...any]):Promise<void>{
     // 1. get room of user
     // 2. emit location info to room
