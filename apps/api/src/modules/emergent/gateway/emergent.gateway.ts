@@ -2,14 +2,14 @@ import { Inject } from '@nestjs/common';
 import { } from '@nestjs/core';
 import { ConnectedSocket, SubscribeMessage } from '@nestjs/websockets';
 import { SocketGateway } from '@secretlab/socket';
-import { AccomodationService } from 'accomodation/accomodation.service';
 import { EmergentRequestDto } from '../dto/EmergentRequestDto';
 import { Coordinate } from 'modules/garage/dto/coordinate.dto';
 import { EmergentReceiveEvent } from '../event/emergentEvent.enum';
+import { EmergentService } from '../service/emergent.service';
 
 export class EmergentGateway extends SocketGateway {
 
-  constructor() {
+  constructor(private readonly emergentRequestService: EmergentService) {
     super()
   }
 
@@ -18,6 +18,8 @@ export class EmergentGateway extends SocketGateway {
     console.log("hi");
     console.log("payload ", payload);
     // 1.Validate & Persist request
+    //TODO: validate request
+    const request = await this.emergentRequestService.saveData(payload[0])
     // 2.Find all garages nearby the request location
 
     // 3. Send request information to those garages
@@ -29,18 +31,14 @@ export class EmergentGateway extends SocketGateway {
   }
   @SubscribeMessage(EmergentReceiveEvent.garageApproveRequest)
   async handleGarageApproveRequest(client: any, payload : [any, ...any]):Promise<void>{
-    console.log("hi",EmergentReceiveEvent.garageApproveRequest);
-    // 1. get persisted request, check if any garage approved yet
+    // 1. get persisted request, check if any garage has approved yet
     // 2. If yes -> return  ,if no -> update and persist that request
     // 3. join room
-    // 4. send information of each other for all in room
+    // 4. send information of each other to room
   }
   @SubscribeMessage(EmergentReceiveEvent.garageInitSupport)
   async garageInitEmergentRequest(client: any, payload : [any, ...any]):Promise<void>{
-    // 1. get persisted request, check if any garage approved yet
-    // 2. If yes -> return  ,if no -> update and persist that request
-    // 3. join room
-    // 4. send information of each other for all in room
+    // Implement later
   }
 
   @SubscribeMessage(EmergentReceiveEvent.garageUpdateLocation)

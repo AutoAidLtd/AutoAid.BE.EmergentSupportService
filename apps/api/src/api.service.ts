@@ -1,14 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '@secretlab/prisma/dist';
-import { AccomodationService } from 'accomodation/accomodation.service';
+import { PrismaService } from '@secretlab/prisma';
 
 @Injectable()
 export class ApiService {
-  constructor(private readonly accoService: AccomodationService){}
+  constructor(){}
    async getHello() {
      console.log("dawdaw"
     );
-    await this.accoService.getAll()
     return 'Hello World!';
   }
 }
