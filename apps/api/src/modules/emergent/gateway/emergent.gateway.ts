@@ -1,40 +1,57 @@
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { } from '@nestjs/core';
-import { ConnectedSocket, SubscribeMessage } from '@nestjs/websockets';
-import { SocketGateway } from '@secretlab/socket';
+import { ConnectedSocket, SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
+import { Socket, SocketGateway } from '@secretlab/socket';
 import { EmergentRequestDto } from '../dto/EmergentRequestDto';
 import { Coordinate } from 'modules/garage/dto/coordinate.dto';
-import { EmergentReceiveEvent } from '../event/emergentEvent.enum';
+import { EmergentEmitEvent, EmergentReceiveEvent } from '../event/emergentEvent.enum';
 import { EmergentService } from '../service/emergent.service';
+import { GarageService } from 'modules/garage/service/garage.service';
+
 
 export class EmergentGateway extends SocketGateway {
 
-  constructor(private readonly emergentRequestService: EmergentService) {
+  constructor(@Inject(EmergentService) private readonly emergentRequestService: EmergentService,
+  @Inject(GarageService) private readonly garageService: GarageService) {
     super()
   }
 
   @SubscribeMessage(EmergentReceiveEvent.userSendRequest)
-  async handleRequestSend(client: any, payload: [EmergentRequestDto,...any]): Promise<void> {
-    console.log("hi");
-    console.log("payload ", payload);
+  async handleRequestSend(client: Socket, payload: EmergentRequestDto): Promise<void> {
+    console.log({
+      emergentRequestService: this.emergentRequestService,
+      gs: this.garageService
+    });
+    return
     // 1.Validate & Persist request
     //TODO: validate request
-    const request = await this.emergentRequestService.saveData(payload[0])
+    const request = await this.emergentRequestService.saveRequest(payload)
+    client.join(request.room_uid);
     // 2.Find all garages nearby the request location
-
+    const nearbyGarages = this.garageService.getNearbyGarages(payload.location)
     // 3. Send request information to those garages
-    // 4. Send request owner result to notify
+    ;(await nearbyGarages).forEach(garage => {
+        //emit to all garage
+        client.to(garage.garage_id.toString()).emit(EmergentEmitEvent.newRequestToGarage, request)
+    })
 
-    client.emit("SEND_REQUEST_HANDLED", "Hihi from SEND_REQUEST")
-    client.emit("SEND_REQUEST_HANDLED",)
+    // 4. Send request owner result to notify
+      client.emit(EmergentEmitEvent.userRequestHandled, "request has been sent")
 
   }
   @SubscribeMessage(EmergentReceiveEvent.garageApproveRequest)
-  async handleGarageApproveRequest(client: any, payload : [any, ...any]):Promise<void>{
+  async handleGarageApproveRequest(client: Socket, {garage_id, request_uid} : {garage_id: number, request_uid: string}):Promise<void>{
     // 1. get persisted request, check if any garage has approved yet
-    // 2. If yes -> return  ,if no -> update and persist that request
-    // 3. join room
+      const persistedRequest = await this.emergentRequestService.getRequestByUid(request_uid);
+      // 2. If yes -> return  ,if no -> update and persist that request
+      if(persistedRequest && !persistedRequest.garage_id) {
+        this.emergentRequestService.updateGarageHandleRequest(persistedRequest.no,garage_id)
+      }
+      // 3. join room
+      client.join(persistedRequest.room_uid)
     // 4. send information of each other to room
+    client.emit(EmergentEmitEvent.garageApproveRequest, persistedRequest)
+    client.in(persistedRequest.room_uid).emit(EmergentEmitEvent.garageApproveRequest, persistedRequest)
   }
   @SubscribeMessage(EmergentReceiveEvent.garageInitSupport)
   async garageInitEmergentRequest(client: any, payload : [any, ...any]):Promise<void>{
@@ -42,14 +59,22 @@ export class EmergentGateway extends SocketGateway {
   }
 
   @SubscribeMessage(EmergentReceiveEvent.garageUpdateLocation)
-  async garageUpdateLocation(@ConnectedSocket() client, payload : [Coordinate, ...any]):Promise<void>{
+  async garageUpdateLocation(client: Socket, {coor,requestUid}: {requestUid: string, coor : Coordinate}):Promise<void>{
     // 1. get room of garage
+      const request =  await this.emergentRequestService.getRequestByUid(requestUid)
     // 2. emit location info to room
+      if(request) {
+        client.in(request.room_uid).emit(EmergentEmitEvent.garageInRoomUpdateLocation, coor)
+      }
   }
 
-  @SubscribeMessage(EmergentReceiveEvent.userSendRequest)
-  async userUpdateLocation(@ConnectedSocket() client, payload : [Coordinate, ...any]):Promise<void>{
-    // 1. get room of user
-    // 2. emit location info to room
+  @SubscribeMessage(EmergentReceiveEvent.userUpdateLocation)
+  async userUpdateLocation(client: Socket, {coor,requestUid}: {requestUid: string, coor : Coordinate}):Promise<void>{
+   // 1. get room of user
+   const request =  await this.emergentRequestService.getRequestByUid(requestUid)
+   // 2. emit location info to room
+     if(request) {
+       client.in(request.room_uid).emit(EmergentEmitEvent.garageInRoomUpdateLocation, coor)
+     }
   }
 }

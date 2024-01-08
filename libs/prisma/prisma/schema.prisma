@@ -52,14 +52,16 @@ model emergent_request {
   updated_date        DateTime @default(now()) @db.Timestamp(6)
   created_user        Int?
   updated_user        Int?
-  is_deleted          Boolean?  @default(false)
+  is_deleted          Boolean? @default(false)
   remark              String?  @db.VarChar(255)
   vehicle_id          Int?
   customer_id         Int
   garage_id           Int?
   place_id            Int
+  room_uid            String   @default(cuid())
+  uid                 String   @default(cuid())
   customer            customer @relation(fields: [customer_id], references: [customer_id], onDelete: NoAction, onUpdate: NoAction)
-  garage              garage?   @relation(fields: [garage_id], references: [garage_id], onDelete: NoAction, onUpdate: NoAction)
+  garage              garage?  @relation(fields: [garage_id], references: [garage_id], onDelete: NoAction, onUpdate: NoAction)
   place               place    @relation(fields: [place_id], references: [place_id], onDelete: NoAction, onUpdate: NoAction)
 
   @@schema("app")

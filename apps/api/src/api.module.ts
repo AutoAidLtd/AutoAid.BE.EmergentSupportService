@@ -5,16 +5,34 @@ import { ApiController } from './api.controller';
 import { ApiService } from './api.service';
 import { GarageModule } from 'modules/garage/garage.module';
 import { EmergentModule } from 'modules/emergent/emergent.module';
-import { JwtModule } from '@nestjs/jwt';
-
+import { JwtModule, JwtService } from '@nestjs/jwt';
+import { AuthGuard } from 'auth.guard';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AuthModule } from 'modules/auth/auth.module';
 
 
 @Module({
   imports: [
-    PrismaModule, RealtimeModule, GarageModule,EmergentModule,
-    JwtModule.register({secret: "secret-lab-12312312312312"})
+    PrismaModule,
+    RealtimeModule,
+    GarageModule,
+    EmergentModule,
+    ConfigModule.forRoot({ isGlobal: true, load: [] }),
+    JwtModule.registerAsync({
+      useFactory: async (configService: ConfigService) => {
+        const securityConfig = configService.get<any>('security');
+        return {
+          secret: configService.get<string>('JWT_ACCESS_SECRET'),
+          signOptions: {
+            expiresIn: securityConfig?.expiresIn ?? 3600 * 24,
+          },
+        };
+      },
+      inject: [ConfigService],
+    }),
+    AuthModule
   ],
   controllers: [ApiController],
-  providers: [ApiService],
+  providers: [ApiService, AuthGuard, JwtService],
 })
 export class ApiModule {}

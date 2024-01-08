@@ -12,7 +12,6 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(ApiModule);
   app.useStaticAssets(resolve(__dirname, '..', 'public'));
   app.enableCors();
-  app.useGlobalGuards(new AuthGuard(new JwtService()))
   // app.useWebSocketAdapter(new SocketIoAdapter(app))
   await app.listen(4000);
 }

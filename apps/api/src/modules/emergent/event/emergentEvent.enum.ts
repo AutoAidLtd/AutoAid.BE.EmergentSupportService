@@ -7,6 +7,7 @@ export const EmergentReceiveEvent =  {
 }
 
 export const EmergentEmitEvent = {
+  newRequestToGarage: "GARAGE_NEW_REQUEST",
   userRequestHandled : "USER_REQUEST_HANDLED",
   garageInRoomUpdateLocation : "GARAGE_INROOM_UPDATE_LOCATION",
   userInRoomUpdateLocation : "USER_INROOM_UPDATE_LOCATION",
