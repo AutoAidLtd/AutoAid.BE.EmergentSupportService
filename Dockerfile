@@ -8,6 +8,8 @@ RUN npm i -g @nestjs/cli
 RUN npm i -g typescript
 RUN pnpm install
 
+EXPOSE 4000
+
 ENTRYPOINT [ "pnpm", "start:dev" ]
 
 
