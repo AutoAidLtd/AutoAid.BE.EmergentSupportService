@@ -5,6 +5,7 @@ WORKDIR /app
 COPY . .
 RUN npm i -g pnpm
 RUN npm i -g @nestjs/cli
+RUN npm i -g typescript
 RUN pnpm install
 
 ENTRYPOINT [ "pnpm", "start:dev" ]
