@@ -22,7 +22,7 @@ jobs:
           name: Push Docker image to Docker Hub
           command: |
             docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
-            docker tag $DOCKER_IMAGE_NAME $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME
+            docker tag $DOCKER_IMAGE_NAME:stage $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME
             docker push $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME
       - add_ssh_keys:
           fingerprints:
