@@ -18,5 +18,9 @@
     "@nestjs/axios": "^3.0.1",
     "@nestjs/common": "^10.3.0",
     "axios": "^1.6.3"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
   }
 }
