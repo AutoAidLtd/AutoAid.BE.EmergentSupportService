@@ -37,3 +37,8 @@ jspm_packages/
 # OS-specific files
 .DS_Store
 Thumbs.db
+
+
+#Typescript - Nest - Monorepo
+
+*.tsbuildinfo

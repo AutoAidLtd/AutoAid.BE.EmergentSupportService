@@ -4,8 +4,9 @@ WORKDIR /app
 
 COPY . .
 RUN npm i -g pnpm
+RUN npm i -g @nestjs/cli
 RUN pnpm install
 
-ENTRYPOINT [ "node", "apps/api/dist/index.js" ]
+ENTRYPOINT [ "pnpm", "start:dev" ]
 
 

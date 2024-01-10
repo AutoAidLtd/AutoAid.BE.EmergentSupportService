@@ -6,7 +6,7 @@
     "libs/*"
   ],
   "scripts": {
-    "start:dev" : "cd apps/api && pnpm start:dev",
+    "start:dev": "cd apps/api && pnpm start:dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
