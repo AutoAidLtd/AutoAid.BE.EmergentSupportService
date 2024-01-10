@@ -3,6 +3,8 @@ jobs:
   build_deploy_dev:
     machine:
       image: ubuntu-2004:2023.02.1
+    environment:
+       DOCKER_IMAGE_NAME: AutoAid.ESS
     steps:
       - checkout
       - run:
