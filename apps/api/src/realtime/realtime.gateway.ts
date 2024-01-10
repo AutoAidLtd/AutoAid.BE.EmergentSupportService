@@ -4,16 +4,19 @@ import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
 import { WebSocketServer } from '@nestjs/websockets/decorators';
 import { PrismaService } from '@secretlab/prisma';
 import { SocketGateway } from '@secretlab/socket';
+import { GarageService } from 'modules/garage/service/garage.service';
 
+@WebSocketGateway()
+export class RealtimeGateway {
 
-export class RealtimeGateway extends SocketGateway {
-
-  constructor() {
-    super()
+  constructor(@Inject(GarageService) private garageService:GarageService) {
+    // super()
   }
 
   @SubscribeMessage('message2')
   async handleMessage(client: any, payload: any): Promise<void> {
-    client.emit("message2", "Hihi from message2");
+    // console.log({gs: });
+    client.emit("message2", await this.garageService.getNearbyGarages({lat: 10.2, lng:26}));
+
   }
 }

@@ -9,7 +9,9 @@ export class PrismaService extends PrismaClient implements OnModuleInit{
     constructor(
         @Optional()
         @Inject(PRISMA_SERVICE_OPTIONS)
-        private readonly prismaServiceOptions: PrismaServiceOptions = {},
+        private readonly prismaServiceOptions: PrismaServiceOptions = {prismaOptions:{
+          log:["query", "info"]
+        }},
     ){
         super()
     }

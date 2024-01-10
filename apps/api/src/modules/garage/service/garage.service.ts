@@ -9,7 +9,7 @@ export interface IGarageService {
   getNearbyGarages: (coordinate: Coordinate) => Promise<GarageDto[]>
 }
 
-@Injectable()
+@Injectable({})
 export class GarageService implements IGarageService {
   public constructor(
     @Inject(PrismaService) private readonly prisma: PrismaService

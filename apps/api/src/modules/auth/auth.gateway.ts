@@ -9,7 +9,9 @@ declare global {
 }
 
 
-export class CommonAuthGateway extends SocketGateway implements OnGatewayConnection{
+export class CommonAuthGateway extends SocketGateway
+implements OnGatewayConnection
+{
   constructor(@Inject(AuthService) private readonly authService:AuthService){
     super()
   }
@@ -62,8 +64,10 @@ export class CommonAuthGateway extends SocketGateway implements OnGatewayConnect
 
     @SubscribeMessage('TEST_ROOM')
     async testRoom(client: Socket, account_id: string) {
-        client.broadcast.emit("JOIN", "connected")
-      console.log(this.authService);
+        // client.broadcast.emit("JOIN", "connected")
+      // console.log(this.authService);
+      console.log(client.rooms);
+
 
     }
 

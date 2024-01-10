@@ -7,7 +7,7 @@ import { GarageService } from 'modules/garage/service/garage.service';
 
 @Module({
   imports:[PrismaModule, GarageModule],
-  providers: [EmergentService,GarageService,  EmergentGateway ],
-  exports: [EmergentGateway, EmergentService]
+  providers: [EmergentService,  EmergentGateway ],
+  exports: [ EmergentService]
 })
 export class EmergentModule {}

@@ -13,7 +13,13 @@ import { AuthModule } from 'modules/auth/auth.module';
 
 @Module({
   imports: [
-    PrismaModule,
+    PrismaModule.forRoot({
+      prismaServiceOptions: {
+        prismaOptions: {
+          log: ['query', 'info', 'warn', 'error'],
+        }
+      }
+    }),
     RealtimeModule,
     GarageModule,
     EmergentModule,

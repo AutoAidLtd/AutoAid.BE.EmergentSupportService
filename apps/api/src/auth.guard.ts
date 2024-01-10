@@ -12,7 +12,7 @@ export class AuthGuard implements CanActivate {
     // For example, you can check if the user is authenticated and has the necessary permissions
     const request = context.switchToWs().getClient().handshake;
     const isAuthenticated = request.headers['authorization'] === 'Bearer YOUR_AUTH_TOKEN';
-    console.log("Token", request.headers['Authorization']);
+    console.log("Token", request.headers['authorization']);
 
 
     if (!isAuthenticated) {
