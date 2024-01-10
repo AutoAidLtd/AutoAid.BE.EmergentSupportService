@@ -15,7 +15,7 @@ jobs:
       - run:
           name: Build Docker image
           command: |
-            docker build -t $DOCKER_IMAGE_NAME:$BRANCH_NAME .
+            docker build -t $DOCKER_IMAGE_NAME:stage .
       - run:
           name: Push Docker image to Docker Hub
           command: |
