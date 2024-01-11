@@ -27,7 +27,8 @@ jobs:
       - run:
           name: install sshpass
           command: |
-            apt install sshpass
+            sudo apt update
+            sudo apt install sshpass
       - add_ssh_keys:
           fingerprints:
             - "70:ee:cd:14:e5:fe:9a:af:98:32:2d:e9:f0:5c:f3:65"
