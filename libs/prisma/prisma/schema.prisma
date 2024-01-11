@@ -218,3 +218,12 @@ model vehicle {
 
   @@schema("app")
 }
+
+model emergent_request_event {
+  emergent_request_id Int
+  event_id            Int
+  ts_created          DateTime @default(now()) @db.Timestamp(6)
+
+  @@id([emergent_request_id, event_id], map: "emergent_request_event_pk")
+  @@schema("app")
+}
