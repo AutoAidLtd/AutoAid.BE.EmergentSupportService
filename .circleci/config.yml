@@ -24,17 +24,23 @@ jobs:
             docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
             docker tag $DOCKER_IMAGE_NAME:stage $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME
             docker push $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME
+      - run:
+          name: install sshpass
+          command: |
+            apt install sshpass
       - add_ssh_keys:
           fingerprints:
             - "70:ee:cd:14:e5:fe:9a:af:98:32:2d:e9:f0:5c:f3:65"
       - run:
           name: SSH to server and deploy Docker image
           command: |
-            CONTAINER_ID=$(ssh -i ~/.ssh/id_rsa $SSH_USERNAME@$SSH_HOST "docker ps --filter 'publish=4000' --format '{{.ID}}'")
+            CONTAINER_ID=$(sshpass -p "$SSH_PASSWORD" ssh $SSH_USERNAME@$SSH_HOST "docker ps --filter 'publish=4000' --format '{{.ID}}'")
+
             if [ ! -z "$CONTAINER_ID" ]; then
-              ssh -i ~/.ssh/id_rsa $SSH_USERNAME@$SSH_HOST "docker stop $CONTAINER_ID && docker rm $CONTAINER_ID"
+              sshpass -p "$SSH_PASSWORD" ssh $SSH_USERNAME@$SSH_HOST "docker stop $CONTAINER_ID && docker rm $CONTAINER_ID"
             fi
-            ssh -i ~/.ssh/id_rsa $SSH_USERNAME@$SSH_HOST "docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD && docker pull $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME && docker run -d -p 4000:4000 $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME"
+
+            sshpass -p "$SSH_PASSWORD" ssh $SSH_USERNAME@$SSH_HOST "docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD && docker pull $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME && docker run -d -p 4000:4000 $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME"
 
 
 workflows:
