@@ -18,50 +18,52 @@ export class EmergentService implements IEmergentRequest {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
   private readonly logger = new Logger(EmergentService.name);
   async getRequestByUid(uid: string): Promise<EmergentRequestDto> {
-    const EMERGENT_REQUEST_EVENT_ID = 1;
-    const emergentRequest = await this.prisma.emergent_request.findFirstOrThrow({
-      where: {
-        uid,
-      },
-      include: {
-        place: true,
-        customer: true,
-        garage: true,
-      },
-    });
+    return await this.prisma.emergent_request
+      .findFirstOrThrow({
+        where: {
+          uid,
+        },
+        include: {
+          place: true,
+          customer: true,
+          garage: true,
+        },
+      })
+      .then(
+        async({
 
-    await this.prisma.emergent_request_event.create({
-      data: {
-        emergent_request_id: emergentRequest.emergent_request_id,
-        event_id: EMERGENT_REQUEST_EVENT_ID,
-        ts_created: new Date(),
-      },
-    });
-
-    const {
-      uid,
-      remark,
-      place: { lat, lng },
-      created_date,
-      customer_id,
-      garage_id,
-      room_uid,
-      emergent_request_id,
-    } = emergentRequest;
-
-    return {
-      uid,
-      remark,
-      location: {
-        lat,
-        lng,
-      },
-      create_timestamp: created_date,
-      room_uid,
-      no: emergent_request_id,
-      garage_id,
-      customer_id,
-    };
+          uid,
+          remark,
+          place: { lat, lng },
+          created_date,
+          customer_id,
+          garage_id,
+          room_uid,
+          emergent_request_id,
+        }) => {
+          const EMERGENT_REQUEST_EVENT_ID = 1;
+          await this.prisma.emergent_request_event.create({
+            data: {
+              emergent_request_id: emergent_request_id,
+              event_id: EMERGENT_REQUEST_EVENT_ID,
+              ts_created : new Date()
+            }
+          })
+          return ({
+            uid,
+            remark,
+            location: {
+              lat,
+              lng,
+            },
+            create_timestamp: created_date,
+            room_uid,
+            no: emergent_request_id,
+            garage_id,
+            customer_id
+          })
+        }
+      );
   }
   getAll(): Promise<any> {
     return this.prisma.emergent_request.findMany();
