@@ -3,11 +3,13 @@ import { JwtService } from '@nestjs/jwt';
 import { OnGatewayConnection, SubscribeMessage, WebSocketGateway, WsResponse } from '@nestjs/websockets';
 import { Socket, SocketGateway } from '@secretlab/socket/dist';
 import { AuthService } from './service/auth.service';
+import ExtendedSocket from "../../types/override/socket"
 
-declare global {
-
+declare module '@secretlab/socket' {
+  interface Socket {
+    user?: any; // Adjust the type of 'user' as needed
+  }
 }
-
 
 export class CommonAuthGateway extends SocketGateway
 implements OnGatewayConnection
@@ -25,8 +27,13 @@ implements OnGatewayConnection
       if(!authHeader.startsWith(AUTH_PREFIX)) throw new Error("Not allowed")
       const token = authHeader.substring(AUTH_PREFIX.length + 1);
       // this.logger.debug(this.authService)
-      console.log(this.authService);
-
+      const user = await this.authService.extractUser(token);
+      console.log(user);
+      if(!!user){
+        client.user = user
+      }else {
+        client.disconnect(true)
+      }
 
 
       // // Authenticate the client/connection here
@@ -69,6 +76,10 @@ implements OnGatewayConnection
       console.log(client.rooms);
 
 
+    }
+    @SubscribeMessage('sign')
+    async signTestToken(client:Socket, account_id: string){
+      client.emit("sign", await this.authService.sign(account_id))
     }
 
 }

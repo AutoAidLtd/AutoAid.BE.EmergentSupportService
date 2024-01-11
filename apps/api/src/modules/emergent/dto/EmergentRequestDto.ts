@@ -13,4 +13,5 @@ export interface EmergentRequestDto{
   create_timestamp: Date,
   room_uid: string,
   garage_id?: number
+  customer_id? : number
 }

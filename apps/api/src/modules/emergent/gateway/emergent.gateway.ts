@@ -34,6 +34,7 @@ export class EmergentGateway  {
   ): Promise<void> {
     // 1.Validate & Persist request
     //TODO: validate request
+    payload.customer_id = client.user?.account_id
     const request = await this.emergentRequestService.saveRequest(payload);
 
     client.join(request.room_uid);

@@ -18,40 +18,50 @@ export class EmergentService implements IEmergentRequest {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
   private readonly logger = new Logger(EmergentService.name);
   async getRequestByUid(uid: string): Promise<EmergentRequestDto> {
-    return await this.prisma.emergent_request
-      .findFirstOrThrow({
-        where: {
-          uid,
-        },
-        include: {
-          place: true,
-          customer: true,
-          garage: true,
-        },
-      })
-      .then(
-        ({
-          uid,
-          remark,
-          place: { lat, lng },
-          created_date,
-          customer_id,
-          garage_id,
-          room_uid,
-          emergent_request_id,
-        }) => ({
-          uid,
-          remark,
-          location: {
-            lat,
-            lng,
-          },
-          create_timestamp: created_date,
-          room_uid,
-          no: emergent_request_id,
-          garage_id,
-        })
-      );
+    const EMERGENT_REQUEST_EVENT_ID = 1;
+    const emergentRequest = await this.prisma.emergent_request.findFirstOrThrow({
+      where: {
+        uid,
+      },
+      include: {
+        place: true,
+        customer: true,
+        garage: true,
+      },
+    });
+
+    await this.prisma.emergent_request_event.create({
+      data: {
+        emergent_request_id: emergentRequest.emergent_request_id,
+        event_id: EMERGENT_REQUEST_EVENT_ID,
+        ts_created: new Date(),
+      },
+    });
+
+    const {
+      uid,
+      remark,
+      place: { lat, lng },
+      created_date,
+      customer_id,
+      garage_id,
+      room_uid,
+      emergent_request_id,
+    } = emergentRequest;
+
+    return {
+      uid,
+      remark,
+      location: {
+        lat,
+        lng,
+      },
+      create_timestamp: created_date,
+      room_uid,
+      no: emergent_request_id,
+      garage_id,
+      customer_id,
+    };
   }
   getAll(): Promise<any> {
     return this.prisma.emergent_request.findMany();
@@ -100,12 +110,12 @@ export class EmergentService implements IEmergentRequest {
         const request = await tx.emergent_request.create({
           data: {
             place_id: (await persistedPlace).place_id,
-            customer_id: 1,
+            customer_id: requestDto.customer_id,
             // vehicle_id: -1,
             created_date: new Date(),
             updated_date: new Date(),
-            created_user: 1,
-            updated_user: 1,
+            created_user: requestDto.customer_id,
+            updated_user: requestDto.customer_id,
             uid: requestUid,
             room_uid: roomUid,
           },
