@@ -41,14 +41,7 @@ export class EmergentService implements IEmergentRequest {
           room_uid,
           emergent_request_id,
         }) => {
-          const EMERGENT_REQUEST_EVENT_ID = 1;
-          await this.prisma.emergent_request_event.create({
-            data: {
-              emergent_request_id: emergent_request_id,
-              event_id: EMERGENT_REQUEST_EVENT_ID,
-              ts_created : new Date()
-            }
-          })
+
           return ({
             uid,
             remark,
@@ -122,6 +115,14 @@ export class EmergentService implements IEmergentRequest {
             room_uid: roomUid,
           },
         });
+        const EMERGENT_REQUEST_EVENT_ID = 1;
+        await tx.emergent_request_event.create({
+          data: {
+            emergent_request_id: request.emergent_request_id,
+            event_id: EMERGENT_REQUEST_EVENT_ID,
+            ts_created : new Date()
+          }
+        })
         return !!request ? {...requestDto,
           room_uid:roomUid,
           uid: requestUid,

@@ -2,7 +2,11 @@ import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
 
 
-@WebSocketGateway()
+@WebSocketGateway({cors: {
+  origin: ["http://localhost:5173"],
+  // allowedHeaders: "*",
+  methods: ["*"]
+}})
 export class SocketGateway {
   @SubscribeMessage('message')
   handleMessage(client:Socket , payload: any): void {

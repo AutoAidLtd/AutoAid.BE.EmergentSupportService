@@ -16,7 +16,11 @@ import {
 import { EmergentService } from "../service/emergent.service";
 import { GarageService } from "modules/garage/service/garage.service";
 
-@WebSocketGateway()
+@WebSocketGateway({cors: {
+  origin: ["http://localhost:5173"],
+  allowedHeaders: "*",
+  methods: "*"
+}})
 export class EmergentGateway  {
   private readonly logger = new Logger(EmergentGateway.name);
 

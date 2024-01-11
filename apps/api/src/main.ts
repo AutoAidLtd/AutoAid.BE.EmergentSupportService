@@ -11,7 +11,10 @@ import { JwtService } from '@nestjs/jwt';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(ApiModule);
   app.useStaticAssets(resolve(__dirname, '..', 'public'));
-  app.enableCors();
+  app.enableCors({
+    origin: ["http://localhost:5173"],
+    methods: "*"
+  });
   // app.useWebSocketAdapter(new SocketIoAdapter(app))
   await app.listen(4000);
 }

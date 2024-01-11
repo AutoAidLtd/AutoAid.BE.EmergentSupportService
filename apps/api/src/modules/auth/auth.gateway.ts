@@ -57,7 +57,7 @@ implements OnGatewayConnection
       // }
     } catch (error) {
       this.logger.error(error.message)
-      client.disconnect(true)
+      // client.disconnect(true)
     }
     }
   @SubscribeMessage('JOIN')
