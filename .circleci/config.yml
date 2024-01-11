@@ -1,37 +1,10 @@
 version: 2.1
-env:
-  DOCKER_IMAGE_NAME: AutoAid.ESS
 jobs:
-  scan:
-    docker:
-      - image: circleci/node:14
-
-    steps:
-      - checkout
-
-      # Create a directory for SonarScanner and install it
-      - run:
-          name: Install SonarScanner
-          command: |
-            mkdir -p ~/.sonar
-            wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip -O ~/.sonar/sonar-scanner-cli-4.6.2.2472-linux.zip
-            unzip ~/.sonar/sonar-scanner-cli-4.6.2.2472-linux.zip -d ~/.sonar/
-            echo 'export PATH=$PATH:$HOME/.sonar/sonar-scanner-4.6.2.2472-linux/bin' >> $BASH_ENV
-            source $BASH_ENV
-
-      # Perform code analysis with SonarQube
-      - run:
-          name: Run SonarQube Analysis
-          command: |
-            sonar-scanner \
-              -Dsonar.login=$SONAR_TOKEN \
-              -Dsonar.host.url=$SONAR_HOST_URL
   build_deploy_dev:
     machine:
       image: ubuntu-2004:2023.02.1
-    docker:
-      image: circleci/node:lastest
-
+    environment:
+       DOCKER_IMAGE_NAME: autoaidess
     steps:
       - checkout
       - run:
@@ -44,24 +17,31 @@ jobs:
       - run:
           name: Build Docker image
           command: |
-            docker build -t $DOCKER_IMAGE_NAME:$BRANCH_NAME .
+            docker build -t $DOCKER_IMAGE_NAME:stage .
       - run:
           name: Push Docker image to Docker Hub
           command: |
             docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
-            docker tag $DOCKER_IMAGE_NAME $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME
+            docker tag $DOCKER_IMAGE_NAME:stage $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME
             docker push $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME
+      - run:
+          name: install sshpass
+          command: |
+            sudo apt update
+            sudo apt install sshpass
       - add_ssh_keys:
           fingerprints:
             - "70:ee:cd:14:e5:fe:9a:af:98:32:2d:e9:f0:5c:f3:65"
       - run:
           name: SSH to server and deploy Docker image
           command: |
-            CONTAINER_ID=$(ssh -i ~/.ssh/id_rsa $SSH_USERNAME@$SSH_HOST "docker ps --filter 'publish=4000' --format '{{.ID}}'")
+            CONTAINER_ID=$(sshpass -p "$SSH_PASSWORD" ssh $SSH_USERNAME@$SSH_HOST "docker ps --filter 'publish=4000' --format '{{.ID}}'")
+
             if [ ! -z "$CONTAINER_ID" ]; then
-              ssh -i ~/.ssh/id_rsa $SSH_USERNAME@$SSH_HOST "docker stop $CONTAINER_ID && docker rm $CONTAINER_ID"
+              sshpass -p "$SSH_PASSWORD" ssh $SSH_USERNAME@$SSH_HOST "docker stop $CONTAINER_ID && docker rm $CONTAINER_ID"
             fi
-            ssh -i ~/.ssh/id_rsa $SSH_USERNAME@$SSH_HOST "docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD && docker pull $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME && docker run -d -p 4000:4000 $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME"
+
+            sshpass -p "$SSH_PASSWORD" ssh $SSH_USERNAME@$SSH_HOST "docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD && docker pull $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME && docker run -d -p 4000:4000 $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME"
 
 
 workflows:
