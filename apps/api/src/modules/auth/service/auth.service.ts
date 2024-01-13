@@ -13,15 +13,22 @@ export class AuthService{
         secret: process.env.JWT_ACCESS_SECRET
       })
     });
+    const subject = await this.extractSubject(token);
+    if(subject){
+      const user = this.prismaService.account.findFirst({
+        where: {
+          account_id : Number.parseInt(subject)
+        }
+      })
+      return user;
+    }
+    return null
+  }
+  async extractSubject(token:string) {
     const cred =  await this.jwtService.verifyAsync(token,{
       secret: process.env.JWT_ACCESS_SECRET
     })
-    const user = this.prismaService.account.findFirst({
-      where: {
-        account_id : Number.parseInt(cred.subject)
-      }
-    })
-    return user;
+    return cred.subject
   }
   async sign(subId: string){
     return this.jwtService.sign({

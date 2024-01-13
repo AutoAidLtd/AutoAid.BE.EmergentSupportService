@@ -31,6 +31,7 @@ implements OnGatewayConnection
       console.log(user);
       if(!!user){
         client.user = user
+        client.join(await this.authService.extractSubject(token))
       }else {
         client.disconnect(true)
       }

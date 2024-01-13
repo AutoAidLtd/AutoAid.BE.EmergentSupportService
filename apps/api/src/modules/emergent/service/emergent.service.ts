@@ -30,8 +30,7 @@ export class EmergentService implements IEmergentRequest {
         },
       })
       .then(
-        async({
-
+        async ({
           uid,
           remark,
           place: { lat, lng },
@@ -41,8 +40,7 @@ export class EmergentService implements IEmergentRequest {
           room_uid,
           emergent_request_id,
         }) => {
-
-          return ({
+          return {
             uid,
             remark,
             location: {
@@ -53,8 +51,8 @@ export class EmergentService implements IEmergentRequest {
             room_uid,
             no: emergent_request_id,
             garage_id,
-            customer_id
-          })
+            customer_id,
+          };
         }
       );
   }
@@ -89,6 +87,7 @@ export class EmergentService implements IEmergentRequest {
         }
       });
   }
+
   async saveRequest(requestDto: EmergentRequestDto) {
     try {
       const persistedRequest = await this.prisma.$transaction(async (tx) => {
@@ -100,8 +99,8 @@ export class EmergentService implements IEmergentRequest {
             updated_user: 1,
           },
         });
-        const requestUid = v4()
-        const roomUid = v4()
+        const requestUid = v4();
+        const roomUid = v4();
         const request = await tx.emergent_request.create({
           data: {
             place_id: (await persistedPlace).place_id,
@@ -120,15 +119,14 @@ export class EmergentService implements IEmergentRequest {
           data: {
             emergent_request_id: request.emergent_request_id,
             event_id: EMERGENT_REQUEST_EVENT_ID,
-            ts_created : new Date()
-          }
-        })
-        return !!request ? {...requestDto,
-          room_uid:roomUid,
-          uid: requestUid,
-        } : null;
+            ts_created: new Date(),
+          },
+        });
+        return !!request
+          ? { ...requestDto, room_uid: roomUid, uid: requestUid }
+          : null;
       }, {});
-      return persistedRequest
+      return persistedRequest;
     } catch (error) {
       this.logger.error(error.message);
       throw error;
