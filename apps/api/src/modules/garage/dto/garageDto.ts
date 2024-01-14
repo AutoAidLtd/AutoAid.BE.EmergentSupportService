@@ -13,6 +13,10 @@ export interface GarageDto {
   place_id: number;
   account_id?: number;
   garage_id?: number;
+  ownerName?: string,
+  ownerEmail?: string,
+  ownerPhone?: string
+
 }
 
 export interface UpdateGarageDto {
