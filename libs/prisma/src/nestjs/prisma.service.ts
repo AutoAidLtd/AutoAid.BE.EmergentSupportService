@@ -10,13 +10,16 @@ export class PrismaService extends PrismaClient implements OnModuleInit{
         @Optional()
         @Inject(PRISMA_SERVICE_OPTIONS)
         private readonly prismaServiceOptions: PrismaServiceOptions = {prismaOptions:{
-          log:["query", "info"]
+          log:["query", "info", "warn","error"]
         }},
     ){
-        super()
+        super({ log:["query", "info", "warn","error"]})
+        console.log(prismaServiceOptions);
+
     }
     async onModuleInit() {
         if (this.prismaServiceOptions.explicitConnect) {
+
           await this.$connect();
         }
       }

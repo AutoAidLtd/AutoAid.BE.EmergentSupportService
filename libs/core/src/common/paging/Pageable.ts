@@ -6,5 +6,6 @@ export interface Pageable {
   sort: {
     by: string,
     direction: "asc"| "desc"
-  }[]
+  }[],
+  keyword?: string
 }

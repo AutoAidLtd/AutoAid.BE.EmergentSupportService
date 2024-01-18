@@ -9,11 +9,13 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
 import { AuthGuard } from 'auth.guard';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from 'modules/auth/auth.module';
+import { CustomerModule } from 'modules/customer/customer.module';
 
 
 @Module({
   imports: [
     PrismaModule.forRoot({
+      isGlobal:true,
       prismaServiceOptions: {
         prismaOptions: {
           log: ['query', 'info', 'warn', 'error'],
@@ -23,6 +25,7 @@ import { AuthModule } from 'modules/auth/auth.module';
     RealtimeModule,
     GarageModule,
     EmergentModule,
+    CustomerModule,
     ConfigModule.forRoot({ isGlobal: true, load: [] }),
     JwtModule.registerAsync({
       useFactory: async (configService: ConfigService) => {

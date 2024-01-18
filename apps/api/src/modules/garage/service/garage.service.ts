@@ -62,7 +62,7 @@ export class GarageService implements IGarageService {
     paging = {
       page: paging?.page ?? 1,
       pageSize: paging?.pageSize ?? DEFAULT_PAGESIZE,
-      sort: paging.sort,
+      sort: paging?.sort,
       totalItems: garageCount,
       totalPages: Math.ceil(garageCount / DEFAULT_PAGESIZE),
     };

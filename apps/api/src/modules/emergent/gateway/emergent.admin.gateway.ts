@@ -1,5 +1,5 @@
 import { SubscribeMessage, WebSocketGateway } from "@nestjs/websockets";
-import { Inject, Pageable } from "@secretlab/core/dist";
+import { Inject, Pageable } from "@secretlab/core";
 import { Socket } from "@secretlab/socket";
 import { GarageService } from "modules/garage/service/garage.service";
 
