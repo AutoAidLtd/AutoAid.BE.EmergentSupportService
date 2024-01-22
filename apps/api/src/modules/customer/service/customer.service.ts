@@ -5,6 +5,7 @@ import { customerDto } from "../dto/customerDto";
 @Injectable({})
 export class CustomerService implements BaseService<customerDto, number >{
   public constructor (private readonly prisma :  PrismaService){}
+  getDetail: (id: number) => Promise<customerDto>;
    async getList (paging: Pageable)  {
     const DEFAULT_PAGESIZE = 20;
     const skipSize = ((paging?.page ?? 1) - 1) * (paging?.pageSize ?? DEFAULT_PAGESIZE);
