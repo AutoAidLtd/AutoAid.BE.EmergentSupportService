@@ -3,14 +3,14 @@ import { CustomerService } from "../service/customer.service";
 import { Socket } from "@secretlab/socket";
 import { Pageable } from "@secretlab/core";
 enum CustomerAdminReceiveEvent {
-  GET_LIST= "GET_LIST",
-  DELETE_USER = "DEL_USER",
-  DETAIL_USER = "DETAIL_USER"
+  GET_LIST= "CUSTOMER_GET_LIST",
+  DELETE_USER = "CUSTOMER_DEL_USER",
+  DETAIL_USER = "CUSTOMER_DETAIL_USER"
 }
 enum CustomerAdminEmitEvent {
-  GET_LIST= "GET_LIST",
-  DELETE_USER = "DEL_USER",
-  DETAIL_USER = "DETAIL_USER"
+  GET_LIST= "CUSTOMER_GET_LIST",
+  DELETE_USER = "CUSTOMER_DEL_USER",
+  DETAIL_USER = "CUSTOMER_DETAIL_USER"
 }
 
 @WebSocketGateway()

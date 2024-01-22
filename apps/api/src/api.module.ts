@@ -10,6 +10,8 @@ import { AuthGuard } from 'auth.guard';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from 'modules/auth/auth.module';
 import { CustomerModule } from 'modules/customer/customer.module';
+import { DashboardModule } from 'modules/dashboard/dashboard.module';
+import { AnalyticGateway } from 'modules/analytic/gateway/analytic.gateway';
 
 
 @Module({
@@ -26,6 +28,8 @@ import { CustomerModule } from 'modules/customer/customer.module';
     GarageModule,
     EmergentModule,
     CustomerModule,
+    DashboardModule,
+    AnalyticGateway,
     ConfigModule.forRoot({ isGlobal: true, load: [] }),
     JwtModule.registerAsync({
       useFactory: async (configService: ConfigService) => {

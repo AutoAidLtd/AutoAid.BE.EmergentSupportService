@@ -62,20 +62,28 @@ export class CustomerService implements BaseService<customerDto, number >{
       this.prisma.customer.count({
         where : {
           // AND : {
-            OR: [{
-              email: {
-                contains: paging?.keyword??""
+            OR: [
+              {
+                email: {
+                  contains: paging?.keyword ?? "",
+                },
               },
-              first_name : {
-                contains: paging?.keyword??""
+              {
+                first_name: {
+                  contains: paging?.keyword ?? "",
+                },
               },
-              last_name : {
-                contains: paging?.keyword??""
+              {
+                last_name: {
+                  contains: paging?.keyword ?? "",
+                },
               },
-              phone_number : {
-                contains: paging?.keyword??""
+              {
+                phone_number: {
+                  contains: paging?.keyword ?? "",
+                },
               },
-            }]
+            ],
           // }
         }
       }),
