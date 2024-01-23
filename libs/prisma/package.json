@@ -33,7 +33,8 @@
     "@nestjs/common": "^10.3.0",
     "@nestjs/core": "^10.3.0",
     "@prisma/client": "^5.7.1",
-    "@secretlab/core": "workspace:*"
+    "@secretlab/core": "workspace:*",
+    "kafkajs": "^2.2.4"
   },
   "prisma": {
     "schema": "./prisma/schema.prisma",

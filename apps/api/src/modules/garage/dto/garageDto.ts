@@ -15,11 +15,13 @@ export interface GarageDto {
   garage_id?: number;
   ownerName?: string,
   ownerEmail?: string,
-  ownerPhone?: string
+  ownerPhone?: string,
+  name?: string
 
 }
 
 export interface UpdateGarageDto {
+  name?: string;
   created_date?: Date;
   updated_date?: Date;
   created_user?: number;

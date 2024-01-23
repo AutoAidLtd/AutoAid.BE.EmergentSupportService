@@ -243,3 +243,55 @@ ALTER TABLE "app"."spare_part" ADD CONSTRAINT "spare_part_spare_part_category_id
 
 -- AddForeignKey
 ALTER TABLE "app"."vehicle" ADD CONSTRAINT "vehicle_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "app"."customer"("customer_id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE "app"."garage"
+ADD COLUMN "name" VARCHAR(255);
+
+-- CreateTable
+CREATE TABLE "app"."notification" (
+  "uuid" UUID NOT NULL,
+  "content" TEXT,
+  "title" VARCHAR(255),
+  "noti_type" VARCHAR(50),
+  "send_time" TIMESTAMP(6),
+  "receive_id" INTEGER,
+  "created_date" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+  "updated_date" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+
+  CONSTRAINT "notification_pkey" PRIMARY KEY ("uuid")
+);
+
+
+  ALTER TABLE "app"."notification" ADD CONSTRAINT "notification_receive_id_fkey" FOREIGN KEY ("receive_id") REFERENCES "ids"."account"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+CREATE TABLE "app"."chat_channel" (
+  "channel_id" SERIAL NOT NULL,
+  "channel_name" VARCHAR(255) NOT NULL,
+  "created_date" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+  "updated_date" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT "chat_channel_pkey" PRIMARY KEY ("channel_id")
+);
+
+CREATE TABLE "app"."message" (
+  "message_id" SERIAL NOT NULL,
+  "channel_id" INTEGER NOT NULL,
+  "sender_id" INTEGER NOT NULL,
+  "content" TEXT NOT NULL,
+  "created_date" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+  "updated_date" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+
+  CONSTRAINT "message_pkey" PRIMARY KEY ("message_id"),
+  CONSTRAINT "message_channel_id_fkey" FOREIGN KEY ("channel_id") REFERENCES "app"."chat_channel"("channel_id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE "app"."participant" (
+  "participant_id" SERIAL NOT NULL,
+  "channel_id" INTEGER NOT NULL,
+  "user_id" INTEGER NOT NULL,
+  "joined_date" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+  "updated_date" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+
+  CONSTRAINT "participant_pkey" PRIMARY KEY ("channel_id","user_id"),
+  CONSTRAINT "participant_channel_id_fkey" FOREIGN KEY ("channel_id") REFERENCES "app"."chat_channel"("channel_id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "participant_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "app"."account"("account_id") ON DELETE CASCADE ON UPDATE CASCADE
+);

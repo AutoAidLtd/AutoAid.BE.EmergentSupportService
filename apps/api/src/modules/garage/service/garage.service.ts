@@ -36,6 +36,17 @@ export class GarageService implements IGarageService {
   }
   async getList(paging: Pageable) {
     const DEFAULT_PAGESIZE = 20;
+
+    // const [_, records] = await this.prisma.$transaction([
+    //     this.prisma.$executeRawUnsafe<any>(`
+    //     CALL app.place_get_all(4);
+    //   `),
+    //     this.prisma.$queryRawUnsafe<any>(`
+    //       FETCH ALL FROM p_result;
+    //   `)
+    // ])
+    // console.log(records);
+
     const getGarageTask = this.prisma.$queryRaw<GarageDto[]>`
 
      SELECT g.*, p.lat, p.lng

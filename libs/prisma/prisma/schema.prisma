@@ -24,8 +24,12 @@ model account {
   exp_access_token   DateTime?        @db.Timestamp(6)
   refresh_token      String?          @db.VarChar
   exp_refresh_tokenn DateTime?        @db.Timestamp(6)
+  account_role       String?          @db.VarChar(50)
+  firebase_uid       String?          @db.VarChar(50)
   customer           customer[]
   garage_account     garage_account[]
+  notification       notification[]
+  participant        participant[]
 
   @@schema("ids")
 }
@@ -39,6 +43,8 @@ model customer {
   address          String?
   date_of_birth    DateTime?          @db.Date
   account_id       Int
+  avatar_url       String?            @db.VarChar(255)
+  gender           String?            @db.VarChar(25)
   account          account            @relation(fields: [account_id], references: [account_id], onDelete: NoAction, onUpdate: NoAction)
   emergent_request emergent_request[]
   vehicle          vehicle[]
@@ -94,6 +100,7 @@ model garage {
   introduction_url String[]           @db.VarChar
   owner_id         String?            @db.VarChar
   place_id         Int
+  name             String?            @db.VarChar(255)
   emergent_request emergent_request[]
   place            place              @relation(fields: [place_id], references: [place_id], onDelete: NoAction, onUpdate: NoAction)
   garage_account   garage_account[]
@@ -225,5 +232,56 @@ model emergent_request_event {
   ts_created          DateTime @default(now()) @db.Timestamp(6)
 
   @@id([emergent_request_id, event_id], map: "emergent_request_event_pk")
+  @@schema("app")
+}
+
+model notification {
+  uuid         String    @id @db.Uuid
+  content      String?
+  title        String?   @db.VarChar(255)
+  noti_type    String?   @db.VarChar(50)
+  send_time    DateTime? @db.Timestamp(6)
+  receive_id   Int?
+  created_date DateTime? @default(now()) @db.Timestamp(6)
+  updated_date DateTime? @default(now()) @db.Timestamp(6)
+  account      account?  @relation(fields: [receive_id], references: [account_id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@schema("app")
+}
+
+model chat_channel {
+  channel_id   Int           @id @default(autoincrement())
+  channel_name String        @db.VarChar(255)
+  created_date DateTime?     @default(now()) @db.Timestamp(6)
+  updated_date DateTime?     @default(now()) @db.Timestamp(6)
+  message      message[]
+  participant  participant[]
+
+  @@schema("app")
+}
+
+model message {
+  message_id   Int          @id @default(autoincrement())
+  channel_id   Int
+  sender_id    Int
+  content      String
+  created_date DateTime?    @default(now()) @db.Timestamp(6)
+  updated_date DateTime?    @default(now()) @db.Timestamp(6)
+  chat_channel chat_channel @relation(fields: [channel_id], references: [channel_id], onDelete: Cascade)
+
+  @@schema("app")
+}
+
+model participant {
+  participant_id Int          @default(autoincrement())
+  channel_id     Int
+  user_id        Int
+  joined_date    DateTime?    @default(now()) @db.Timestamp(6)
+  updated_date   DateTime?    @default(now()) @db.Timestamp(6)
+  is_deleted     Boolean?     @default(false)
+  chat_channel   chat_channel @relation(fields: [channel_id], references: [channel_id], onDelete: Cascade)
+  account        account      @relation(fields: [user_id], references: [account_id], onDelete: Cascade)
+
+  @@id([channel_id, user_id])
   @@schema("app")
 }

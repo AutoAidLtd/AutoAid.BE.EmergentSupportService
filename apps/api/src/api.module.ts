@@ -12,6 +12,8 @@ import { AuthModule } from 'modules/auth/auth.module';
 import { CustomerModule } from 'modules/customer/customer.module';
 import { DashboardModule } from 'modules/dashboard/dashboard.module';
 import { AnalyticGateway } from 'modules/analytic/gateway/analytic.gateway';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { AnalyticModule } from 'modules/analytic/analytic.module';
 
 
 @Module({
@@ -29,7 +31,7 @@ import { AnalyticGateway } from 'modules/analytic/gateway/analytic.gateway';
     EmergentModule,
     CustomerModule,
     DashboardModule,
-    AnalyticGateway,
+    AnalyticModule,
     ConfigModule.forRoot({ isGlobal: true, load: [] }),
     JwtModule.registerAsync({
       useFactory: async (configService: ConfigService) => {
@@ -43,7 +45,7 @@ import { AnalyticGateway } from 'modules/analytic/gateway/analytic.gateway';
       },
       inject: [ConfigService],
     }),
-    AuthModule
+    AuthModule,
   ],
   controllers: [ApiController],
   providers: [ApiService, AuthGuard, JwtService],
