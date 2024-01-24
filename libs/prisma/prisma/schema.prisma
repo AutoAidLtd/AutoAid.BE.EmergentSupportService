@@ -254,6 +254,7 @@ model chat_channel {
   channel_name String        @db.VarChar(255)
   created_date DateTime?     @default(now()) @db.Timestamp(6)
   updated_date DateTime?     @default(now()) @db.Timestamp(6)
+  is_deleted   Boolean?      @default(false)
   message      message[]
   participant  participant[]
 
