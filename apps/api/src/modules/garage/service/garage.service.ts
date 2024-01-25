@@ -27,11 +27,12 @@ export class GarageService implements IGarageService {
       });
       let nearGarages = garages.filter(
         (g) =>
-          calculateDistance(coordinate, g.place) <= TARGET_NUMBER_GARAGES_FOUND
+          calculateDistance(coordinate, g.place) <= GARAGE_SCALE_KILOMETER
       );
       return nearGarages.map((e) => ({ ...e }));
     } catch (error) {
       // Handle the error here
+      return null
     }
   }
   async getList(paging: Pageable) {

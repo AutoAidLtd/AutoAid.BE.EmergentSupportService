@@ -12,5 +12,4 @@ export class DashboardGateway {
   async getActiveUsers(client: Socket, payload){
     client.emit(DashboardEmittingEvents.ACTIVE_USERS, await this.dashboardService.getUsersCurrentMonth())
   }
-
 }

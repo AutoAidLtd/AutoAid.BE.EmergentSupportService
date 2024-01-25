@@ -15,6 +15,7 @@ import {
 } from "../event/emergentEvent.enum";
 import { EmergentService } from "../service/emergent.service";
 import { GarageService } from "modules/garage/service/garage.service";
+import { GatewayResponse } from "modules/common/dto/GatewayResponse";
 
 @WebSocketGateway({cors: {
   origin: ["http://localhost:5173"],
@@ -46,9 +47,9 @@ export class EmergentGateway  {
     const nearbyGarages = this.garageService.getNearbyGarages(payload.location);
     // 3. Send request information to those garages
     (await nearbyGarages).forEach((garage) => {
-      //emit to all garage
+      //emit to all garage by account id
       client
-        .to(garage.garage_id.toString())
+      .to(garage.garage_id.toString())
         .emit(EmergentEmitEvent.newRequestToGarage, request);
     });
 
@@ -70,14 +71,28 @@ export class EmergentGateway  {
         persistedRequest.no,
         garage_id
       );
+    }else {
+      client.emit(EmergentEmitEvent.garageApproveRequest, {
+        success: false,
+        message: "Request has been approved by another garage",
+        data : null
+      } as GatewayResponse<any>)
     }
     // 3. join room
     client.join(persistedRequest.room_uid);
     // 4. send information of each other to room
-    client.emit(EmergentEmitEvent.garageApproveRequest, persistedRequest);
+    client.emit(EmergentEmitEvent.garageApproveRequest, {
+      success: true,
+      data: persistedRequest,
+      message: "Request approved"
+    } as GatewayResponse<EmergentRequestDto>);
     client
       .in(persistedRequest.room_uid)
-      .emit(EmergentEmitEvent.garageApproveRequest, persistedRequest);
+      .emit(EmergentEmitEvent.garageApproveRequest, {
+        success: true,
+        data: persistedRequest,
+        message: "There's a garage approved request"
+      } as GatewayResponse<EmergentRequestDto>);
   }
   @SubscribeMessage(EmergentReceiveEvent.garageInitSupport)
   async garageInitEmergentRequest(
