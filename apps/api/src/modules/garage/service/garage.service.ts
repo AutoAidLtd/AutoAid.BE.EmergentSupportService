@@ -25,10 +25,12 @@ export class GarageService implements IGarageService {
           place: true,
         },
       });
-      let nearGarages = garages.filter(
-        (g) =>
-          calculateDistance(coordinate, g.place) <= GARAGE_SCALE_KILOMETER
-      );
+      garages.forEach(g=>{
+        console.log({
+          dist:  calculateDistance(coordinate, g.place)
+        });
+      })
+      let nearGarages = garages;
       return nearGarages.map((e) => ({ ...e }));
     } catch (error) {
       // Handle the error here

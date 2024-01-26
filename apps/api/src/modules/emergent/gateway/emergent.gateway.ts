@@ -15,6 +15,7 @@ import {
 } from "../event/emergentEvent.enum";
 import { EmergentService } from "../service/emergent.service";
 import { GarageService } from "modules/garage/service/garage.service";
+import { calculateDistance } from "modules/garage/utils";
 
 @WebSocketGateway({cors: {
   origin: ["http://localhost:5173"],
@@ -39,14 +40,18 @@ export class EmergentGateway  {
     // 1.Validate & Persist request
     //TODO: validate request
     payload.customer_id = client.user?.account_id
+
     const request = await this.emergentRequestService.saveRequest(payload);
 
     client.join(request.room_uid);
     // 2.Find all garages nearby the request location
-    const nearbyGarages = this.garageService.getNearbyGarages(payload.location);
+    const nearbyGarages = await this.garageService.getNearbyGarages(payload.location);
+    console.log({nearbyGarages});
+
     // 3. Send request information to those garages
-    (await nearbyGarages).forEach(async (garage) => {
+    nearbyGarages.forEach(async (garage) => {
       //emit to all garage
+      request.distance = calculateDistance(garage.place, request.location)
       await client.join(garage.owner_id.toString())
       client
         .to(garage.owner_id.toString())

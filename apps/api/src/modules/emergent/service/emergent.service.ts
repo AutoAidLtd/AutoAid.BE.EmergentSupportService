@@ -91,6 +91,9 @@ export class EmergentService implements IEmergentRequest {
   async saveRequest(requestDto: EmergentRequestDto) {
     try {
       const persistedRequest = await this.prisma.$transaction(async (tx) => {
+        requestDto.customer_id =  (await tx.customer.findFirstOrThrow({where: {
+          account_id: requestDto.customer_id
+        }})).customer_id
         const persistedPlace = tx.place.create({
           data: {
             lat: requestDto.location.lat,

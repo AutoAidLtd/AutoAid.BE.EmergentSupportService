@@ -17,6 +17,10 @@ export interface GarageDto {
   ownerEmail?: string,
   ownerPhone?: string,
   name?: string
+  place?: {
+    lat: number,
+    lng: number,
+  }
 
 }
 
