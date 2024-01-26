@@ -28,7 +28,7 @@ export class AuthService{
     const cred =  await this.jwtService.verifyAsync(token,{
       secret: process.env.JWT_ACCESS_SECRET
     })
-    return cred.subject
+    return cred.nameid
   }
   async sign(subId: string){
     return this.jwtService.sign({
