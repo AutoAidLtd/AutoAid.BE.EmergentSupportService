@@ -1,0 +1,6 @@
+export enum ScheduleStatus{
+  PENDING="PENDING",
+  SCHEDULED="SCHEDULED",
+  REJECTED="REJECTED",
+  COMPLETE="COMPLETE"
+}

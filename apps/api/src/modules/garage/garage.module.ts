@@ -3,6 +3,8 @@ import { Module } from '@nestjs/common';
 import { GarageService } from './service/garage.service';
 import { PrismaModule } from '@secretlab/prisma/dist';
 import GarageController from './controller/garage.controller';
+import { ScheduleModule } from 'modules/schedule/schedule.module';
+import { ScheduleService } from 'modules/schedule/service/schedule.service';
 
 @Module({
   imports:[HttpModule.register({
@@ -10,10 +12,11 @@ import GarageController from './controller/garage.controller';
     baseURL: "http://localhost:4000"
 
   }),
-  PrismaModule
+  PrismaModule,
+  ScheduleModule
 ],
 controllers:[GarageController],
-  providers: [GarageService],
+  providers: [GarageService, ScheduleService],
   exports: [GarageService]
 })
 export class GarageModule {}

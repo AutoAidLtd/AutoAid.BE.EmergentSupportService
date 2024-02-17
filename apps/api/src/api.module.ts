@@ -15,6 +15,7 @@ import { AnalyticGateway } from 'modules/analytic/gateway/analytic.gateway';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AnalyticModule } from 'modules/analytic/analytic.module';
 import { InboxModule } from 'modules/inbox/inbox.module';
+import { ScheduleModule } from 'modules/schedule/schedule.module';
 
 
 @Module({
@@ -34,6 +35,8 @@ import { InboxModule } from 'modules/inbox/inbox.module';
     DashboardModule,
     AnalyticModule,
     InboxModule,
+    ScheduleModule,
+
     ConfigModule.forRoot({ isGlobal: true, load: [] }),
     JwtModule.registerAsync({
       useFactory: async (configService: ConfigService) => {

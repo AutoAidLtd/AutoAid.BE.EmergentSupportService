@@ -127,17 +127,18 @@ model garage_account {
 }
 
 model garage_service {
-  garage_service_id Int      @id @default(autoincrement())
-  created_date      DateTime @default(now()) @db.Timestamp(6)
-  updated_date      DateTime @default(now()) @db.Timestamp(6)
+  garage_service_id Int               @id @default(autoincrement())
+  created_date      DateTime          @default(now()) @db.Timestamp(6)
+  updated_date      DateTime          @default(now()) @db.Timestamp(6)
   created_user      Int
   updated_user      Int
-  is_deleted        Boolean  @default(false)
-  service_name      String   @db.VarChar(255)
+  is_deleted        Boolean           @default(false)
+  service_name      String            @db.VarChar(255)
   description       String?
-  price             Decimal? @db.Decimal(10, 2)
+  price             Decimal?          @db.Decimal(10, 2)
   garage_id         Int
-  garage            garage   @relation(fields: [garage_id], references: [garage_id], onDelete: NoAction, onUpdate: NoAction)
+  garage            garage            @relation(fields: [garage_id], references: [garage_id], onDelete: NoAction, onUpdate: NoAction)
+  schedule_detail   schedule_detail[]
 
   @@schema("app")
 }
@@ -158,21 +159,22 @@ model place {
 }
 
 model service_schedule {
-  service_schedule_id     Int      @id @default(autoincrement())
-  created_date            DateTime @default(now()) @db.Timestamp(6)
-  updated_date            DateTime @default(now()) @db.Timestamp(6)
+  service_schedule_id     Int               @id @default(autoincrement())
+  created_date            DateTime          @default(now()) @db.Timestamp(6)
+  updated_date            DateTime          @default(now()) @db.Timestamp(6)
   created_user            Int
   updated_user            Int
-  is_deleted              Boolean  @default(false)
+  is_deleted              Boolean           @default(false)
   vehicle_id              Int
-  check_in_time           DateTime @db.Timestamp(6)
-  check_out_time          DateTime @db.Timestamp(6)
+  check_in_time           DateTime          @db.Timestamp(6)
+  check_out_time          DateTime          @db.Timestamp(6)
   description             String?
-  price                   Decimal? @db.Decimal(10, 2)
+  price                   Decimal?          @db.Decimal(10, 2)
   garage_id               Int
-  service_schedule_status String   @db.VarChar(50)
-  garage                  garage   @relation(fields: [garage_id], references: [garage_id], onDelete: NoAction, onUpdate: NoAction)
-  vehicle                 vehicle  @relation(fields: [vehicle_id], references: [vehicle_id], onDelete: NoAction, onUpdate: NoAction)
+  service_schedule_status String            @db.VarChar(50)
+  schedule_detail         schedule_detail[]
+  garage                  garage            @relation(fields: [garage_id], references: [garage_id], onDelete: NoAction, onUpdate: NoAction)
+  vehicle                 vehicle           @relation(fields: [vehicle_id], references: [vehicle_id], onDelete: NoAction, onUpdate: NoAction)
 
   @@schema("app")
 }
@@ -255,6 +257,7 @@ model chat_channel {
   created_date DateTime?     @default(now()) @db.Timestamp(6)
   updated_date DateTime?     @default(now()) @db.Timestamp(6)
   is_deleted   Boolean?      @default(false)
+  is_group     Boolean?      @default(false)
   message      message[]
   participant  participant[]
 
@@ -284,5 +287,17 @@ model participant {
   account        account      @relation(fields: [user_id], references: [account_id], onDelete: Cascade)
 
   @@id([channel_id, user_id])
+  @@schema("app")
+}
+
+model schedule_detail {
+  schedule_detail_id Int              @default(autoincrement())
+  is_deleted         Boolean          @default(false)
+  schedule_id        Int
+  service_id         Int
+  service_schedule   service_schedule @relation(fields: [schedule_id], references: [service_schedule_id], onDelete: NoAction, onUpdate: NoAction, map: "schedule_detail_schedule")
+  garage_service     garage_service   @relation(fields: [service_id], references: [garage_service_id], onDelete: NoAction, onUpdate: NoAction, map: "schedule_detail_service")
+
+  @@id([schedule_detail_id, schedule_id, service_id], map: "schedule_detail_PK")
   @@schema("app")
 }
