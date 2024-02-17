@@ -18,12 +18,12 @@ class GarageController {
     @Query("page", ParseIntPipe) page,
     @Query("pageSize", ParseIntPipe) pageSize,
     @Query("keyword") keyword: string,
-    @Query("isGetNearby", ParseBoolPipe) isGetNearby,
-    @Query("lat", ParseFloatPipe) lat,
-    @Query("lng", ParseFloatPipe) lng
+    @Query("isGetNearby") isGetNearby,
+    @Query("lat") lat?,
+    @Query("lng") lng?
   ) {
     return isGetNearby
-      ? await this.garageService.getNearbyGarages({ lat, lng })
+      ? await this.garageService.getNearbyGarages({ lat:Number.parseInt(lat), lng:Number.parseInt(lng) })
       : await this.garageService.getList({
           page,
           pageSize,
