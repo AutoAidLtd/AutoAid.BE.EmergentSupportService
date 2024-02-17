@@ -28,7 +28,7 @@ bower_components/
 jspm_packages/
 
 # Environment variables
-.env
+# .env
 .env.local
 .env.*.local
 .env.test
