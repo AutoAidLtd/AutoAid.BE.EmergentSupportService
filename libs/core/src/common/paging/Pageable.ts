@@ -3,7 +3,7 @@ export interface Pageable {
   pageSize:number,
   totalItems?: number,
   totalPages?: number,
-  sort: {
+  sort?: {
     by: string,
     direction: "asc"| "desc"
   }[],
