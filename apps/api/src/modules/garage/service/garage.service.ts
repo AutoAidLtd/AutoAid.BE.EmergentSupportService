@@ -25,16 +25,16 @@ export class GarageService implements IGarageService {
           place: true,
         },
       });
-      garages.forEach(g=>{
+      garages.forEach((g) => {
         console.log({
-          dist:  calculateDistance(coordinate, g.place)
+          dist: calculateDistance(coordinate, g.place),
         });
-      })
+      });
       let nearGarages = garages;
       return nearGarages.map((e) => ({ ...e }));
     } catch (error) {
       // Handle the error here
-      return null
+      return null;
     }
   }
   async getList(paging: Pageable) {
@@ -50,6 +50,10 @@ export class GarageService implements IGarageService {
     // ])
     // console.log(records);
 
+    const searchKeyword = !!paging?.keyword
+      ? "%" + paging?.keyword + "%"
+      : "%%";
+
     const getGarageTask = this.prisma.$queryRaw<GarageDto[]>`
 
      SELECT g.*, p.lat, p.lng
@@ -58,7 +62,7 @@ export class GarageService implements IGarageService {
       -- a.phone_number as ownerPhone
       FROM app.garage g
       LEFT JOIN app.place p ON g.place_id = p.place_id
-      -- LEFT JOin ids.account a ON g.owner_id = a.account_id
+      WHERE g.name LIKE ${searchKeyword}
       LIMIT ${paging?.pageSize ?? DEFAULT_PAGESIZE}
       OFFSET ${
         ((paging?.page ?? 1) - 1) * (paging?.pageSize ?? DEFAULT_PAGESIZE)
@@ -68,6 +72,7 @@ export class GarageService implements IGarageService {
       getGarageTask,
       this.prisma.garage.count(),
     ]);
+
     const garageDtos = garages.map((entity: any) => ({
       ...entity,
       lat: entity.lat,
@@ -84,5 +89,19 @@ export class GarageService implements IGarageService {
       pagination: paging,
       rows: garageDtos,
     } as PagedList<GarageDto>;
+  }
+  async getDetailGarage(id: number){
+    return this.prisma.garage.findUnique({
+      where : {
+        garage_id: id
+      },
+      include: {
+        garage_service : true,
+        place: true
+      }
+    }).then(e => ({...e, garage_service: e.garage_service.map(gs => ({
+      ...gs,
+      price: gs.price.toNumber()
+    })), } as GarageDto ))
   }
 }

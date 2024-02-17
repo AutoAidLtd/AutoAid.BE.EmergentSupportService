@@ -1,3 +1,5 @@
+import { GarageServiceDto } from "./garageServiceDto";
+
 export interface GarageDto {
   created_date?: Date;
   updated_date?: Date;
@@ -20,7 +22,8 @@ export interface GarageDto {
   place?: {
     lat: number,
     lng: number,
-  }
+  },
+  garage_service?: GarageServiceDto[]
 
 }
 

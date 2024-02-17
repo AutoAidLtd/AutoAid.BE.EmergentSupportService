@@ -2,6 +2,7 @@ import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { GarageService } from './service/garage.service';
 import { PrismaModule } from '@secretlab/prisma/dist';
+import GarageController from './controller/garage.controller';
 
 @Module({
   imports:[HttpModule.register({
@@ -11,6 +12,7 @@ import { PrismaModule } from '@secretlab/prisma/dist';
   }),
   PrismaModule
 ],
+controllers:[GarageController],
   providers: [GarageService],
   exports: [GarageService]
 })

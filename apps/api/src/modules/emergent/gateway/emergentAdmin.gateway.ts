@@ -3,11 +3,16 @@ import { Inject, Pageable } from "@secretlab/core";
 import { Socket } from "@secretlab/socket";
 import { GarageService } from "modules/garage/service/garage.service";
 
-@WebSocketGateway()
+@WebSocketGateway({cors: {
+  origin: ["http://localhost:5173"],
+  allowedHeaders: "*",
+  methods: "*"
+}})
 export class EmergentAdminGateway {
-  public constructor(@Inject(GarageService)private readonly garageService: GarageService){}
+  constructor(@Inject(GarageService)private readonly garageService: GarageService){}
+
   @SubscribeMessage("GARAGE_ADMIN_LIST")
-  public async getList(client: Socket, paging: Pageable) {
+  async getList(client: Socket, paging: Pageable) {
     client.emit("GARAGE_ADMIN_LIST",await this.garageService.getList(paging))
   }
 }

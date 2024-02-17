@@ -16,6 +16,7 @@ import {
 import { EmergentService } from "../service/emergent.service";
 import { GarageService } from "modules/garage/service/garage.service";
 import { calculateDistance } from "modules/garage/utils";
+import { Pageable } from "@secretlab/core";
 
 @WebSocketGateway({cors: {
   origin: ["http://localhost:5173"],
@@ -126,5 +127,9 @@ export class EmergentGateway  {
         .in(request.room_uid)
         .emit(EmergentEmitEvent.garageInRoomUpdateLocation, coor);
     }
+  }
+  @SubscribeMessage("GARAGE_ADMIN_LIST")
+  public async getList(client: Socket, paging: Pageable) {
+    client.emit("GARAGE_ADMIN_LIST",await this.garageService.getList(paging))
   }
 }

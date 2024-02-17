@@ -50,6 +50,9 @@ import { InboxModule } from 'modules/inbox/inbox.module';
     AuthModule,
   ],
   controllers: [ApiController],
-  providers: [ApiService, AuthGuard, JwtService],
+  providers: [
+    ApiService,
+    JwtService
+  ],
 })
 export class ApiModule {}
