@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@nestjs/swagger": "^7.3.0",
     "lodash": "^4.17.21"
   }
 }

@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
-import { Pageable, PagedList } from "@secretlab/core/dist";
-import { PrismaService } from "@secretlab/prisma/dist";
 import { VehicleDto } from "../dto/vehicleDto";
+import { PrismaService } from "@secretlab/prisma/dist";
+import { Pageable, PagedList } from "@secretlab/core/dist";
 
 @Injectable()
 export class VehicleService {
