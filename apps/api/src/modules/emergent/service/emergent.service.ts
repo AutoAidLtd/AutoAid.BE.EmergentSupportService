@@ -41,8 +41,18 @@ export class EmergentService implements IEmergentRequest {
           garage_id,
           room_uid,
           emergent_request_id,
-          vehicle_meta
+          vehicle_meta,
+           garage,
+           customer
         }) => {
+          const placeGarage = (await this.prisma.garage.findFirst({
+            where: {
+              garage_id
+            },
+            include: {
+              place : true,
+            }
+          }))?.place
           let vehicle = null;
           try {
             if(vehicle_meta){
@@ -62,7 +72,10 @@ export class EmergentService implements IEmergentRequest {
             room_uid,
             garage_id,
             customer_id,
-            vehicle
+            vehicle,
+            distance : placeGarage ? calculateDistance({...placeGarage}, {lat, lng} ): 0,
+            garage,
+            customer
           };
         }
       );

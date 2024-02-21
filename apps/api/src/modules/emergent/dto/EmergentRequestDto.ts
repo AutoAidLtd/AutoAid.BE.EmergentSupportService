@@ -16,5 +16,5 @@ export interface EmergentRequestDto{
   customer_id? : number;
   distance?: number;
   customer?: any,
-
+  garage?: any
 }
