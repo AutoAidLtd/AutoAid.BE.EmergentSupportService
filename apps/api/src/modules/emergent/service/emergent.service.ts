@@ -171,7 +171,7 @@ export class EmergentService implements IEmergentRequest {
         })
         const [requests, schedulesCount] = await Promise.all([
           getRequestsTask,
-          this.prisma.service_schedule.count({
+          this.prisma.emergent_request.count({
             where: {
               garage_id: garageId,
             },
