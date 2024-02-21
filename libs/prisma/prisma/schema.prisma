@@ -66,6 +66,7 @@ model emergent_request {
   place_id            Int
   room_uid            String   @default(cuid())
   uid                 String   @default(cuid())
+  vehicle_meta        String?
   customer            customer @relation(fields: [customer_id], references: [customer_id], onDelete: NoAction, onUpdate: NoAction)
   garage              garage?  @relation(fields: [garage_id], references: [garage_id], onDelete: NoAction, onUpdate: NoAction)
   place               place    @relation(fields: [place_id], references: [place_id], onDelete: NoAction, onUpdate: NoAction)
@@ -172,6 +173,7 @@ model service_schedule {
   price                   Decimal?          @db.Decimal(10, 2)
   garage_id               Int
   service_schedule_status String            @db.VarChar(50)
+  remark                  String?
   schedule_detail         schedule_detail[]
   garage                  garage            @relation(fields: [garage_id], references: [garage_id], onDelete: NoAction, onUpdate: NoAction)
   vehicle                 vehicle           @relation(fields: [vehicle_id], references: [vehicle_id], onDelete: NoAction, onUpdate: NoAction)
@@ -222,6 +224,7 @@ model vehicle {
   mileage          Int?
   engine_number    String?            @db.VarChar(50)
   chassis_number   String?            @db.VarChar(50)
+  is_car           Boolean?           @default(false)
   service_schedule service_schedule[]
   customer         customer           @relation(fields: [owner_id], references: [customer_id], onDelete: NoAction, onUpdate: NoAction)
 

@@ -10,9 +10,11 @@ export interface EmergentRequestDto{
     brand : "String"
   },
   remark: string,
-  create_timestamp: Date,
+  create_timestamp?: Date,
   room_uid: string,
   garage_id?: number
   customer_id? : number;
   distance?: number;
+  customer?: any,
+
 }

@@ -13,13 +13,15 @@ import {
 import { GarageService } from "../service/garage.service";
 import { ScheduleService } from "modules/schedule/service/schedule.service";
 import { ScheduleStatus } from "modules/schedule/dto/enum/scheduleStatus";
+import { EmergentService } from "modules/emergent/service/emergent.service";
 
 @Controller("/garage")
 class GarageController {
   constructor(
     private readonly garageService: GarageService,
-    private readonly scheduleService: ScheduleService
-  ) {}
+    private readonly scheduleService: ScheduleService,
+    private readonly emergeService: EmergentService,
+    ) {}
 
   @Get("")
   public async getGarage(
@@ -52,6 +54,18 @@ class GarageController {
       page: page ?? 1,
       pageSize: pageSize ?? 20,
     }, status);
+  }
+  @Get(":id/emergent-requests")
+  public async getGarageRequests(
+    @Param("id", ParseIntPipe) id,
+    @Query("status") status: ScheduleStatus,
+    @Query("page", ParseIntPipe) page?,
+    @Query("pageSize", ParseIntPipe) pageSize?,
+  ) {
+    return await this.emergeService.getRequestsByGarage(id, {
+      page: page ?? 1,
+      pageSize: pageSize ?? 20,
+    });
   }
 
   // POST /garage
