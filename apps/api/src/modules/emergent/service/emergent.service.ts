@@ -45,19 +45,21 @@ export class EmergentService implements IEmergentRequest {
            garage,
            customer
         }) => {
-          const placeGarage = (await this.prisma.garage.findFirst({
-            where: {
-              garage_id
-            },
-            include: {
-              place : true,
-            }
-          }))?.place
+
           let vehicle = null;
+          let placeGarage = null;
           try {
             if(vehicle_meta){
               vehicle = JSON.parse(vehicle_meta)
             }
+            placeGarage= (await this.prisma.garage.findFirst({
+              where: {
+                garage_id
+              },
+              include: {
+                place : true,
+              }
+            }))?.place
           } catch (error) {
           }
           return {
