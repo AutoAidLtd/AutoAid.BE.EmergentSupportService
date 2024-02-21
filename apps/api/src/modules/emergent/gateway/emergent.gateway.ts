@@ -79,13 +79,16 @@ export class EmergentGateway  {
         garage_id
       );
     }
+    const returnRequest = await this.emergentRequestService.getRequestByUid(
+      request_uid
+    );
     // 3. join room
-    client.join(persistedRequest.room_uid);
+    client.join(returnRequest.room_uid);
     // 4. send information of each other to room
-    client.emit(EmergentEmitEvent.garageApproveRequest, persistedRequest);
+    client.emit(EmergentEmitEvent.garageApproveRequest, returnRequest);
     client
-      .in(persistedRequest.room_uid)
-      .emit(EmergentEmitEvent.garageApproveRequest, persistedRequest);
+      .in(returnRequest.room_uid)
+      .emit(EmergentEmitEvent.garageApproveRequest, returnRequest);
   }
   @SubscribeMessage(EmergentReceiveEvent.garageInitSupport)
   async garageInitEmergentRequest(
