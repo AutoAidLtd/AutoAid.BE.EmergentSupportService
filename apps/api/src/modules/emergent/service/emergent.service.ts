@@ -75,7 +75,7 @@ export class EmergentService implements IEmergentRequest {
             vehicle,
             distance : placeGarage ? calculateDistance({...placeGarage}, {lat, lng} ): 0,
             garage,
-            customer
+            customer,
           };
         }
       );
@@ -133,6 +133,7 @@ export class EmergentService implements IEmergentRequest {
             place_id: (await persistedPlace).place_id,
             customer_id: requestDto.customer_id,
             // vehicle_id: -1,
+            remark: requestDto?.remark,
             vehicle_meta: JSON.stringify(requestDto.vehicle),
             created_date: new Date(),
             updated_date: new Date(),
